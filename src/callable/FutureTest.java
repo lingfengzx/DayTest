@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 public class FutureTest {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
@@ -24,14 +25,37 @@ public class FutureTest {
 	            return "分线程完成";
 			}
         };
-        ExecutorService es = Executors.newSingleThreadExecutor();
+        
+        
+        FutureTask<String> futureTask=new FutureTask<>(callable);
+        new Thread(futureTask).start();
+        
+       /* ExecutorService es = Executors.newSingleThreadExecutor();
         Future<String> future = es.submit(callable);
-        es.shutdown();
+        es.shutdown();*/
         System.out.println("主线程工作正在进行");
         Thread.sleep(5*1000);
         System.out.println("主线程工作结束");
-        String result = future.get();
-        System.out.println(result);
-
+       // String result = future.get();
+        //System.out.println(result);
+        System.out.println("futureTask"+futureTask.get());
+    }
+    
+    public void TestRunable() {
+    	Runnable runnable=new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				System.out.println("Runnable run ....");
+				try {
+					Thread.sleep(20000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		new Thread(runnable).start();
     }
 }
